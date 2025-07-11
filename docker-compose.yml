@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  mental-health-chat:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - LLM_PROXY_URL=${LLM_PROXY_URL:-https://your-claude-proxy.example.com/generate}
+      - PERSPECTIVE_API_KEY=${PERSPECTIVE_API_KEY}
+    volumes:
+      - ./Dataset.csv:/app/Dataset.csv:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s 
