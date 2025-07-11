@@ -14,14 +14,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY . .
 
 # Create Streamlit config directory and file
-RUN mkdir -p ~/.streamlit && \
-    printf "[server]\nheadless = true\nport = 8501\nenableCORS = false\nenableXsrfProtection = false\n" > ~/.streamlit/config.toml
+RUN mkdir -p /root/.streamlit && \
+    printf "[server]\nheadless = true\nport = 8000\nenableCORS = false\nenableXsrfProtection = false\n" > /root/.streamlit/config.toml
 
-# Expose port
-EXPOSE 8501
-
-# Health check
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+# Expose port (Render expects 8000)
+EXPOSE 8000
 
 # Run the application
-ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"] 
+CMD ["streamlit", "run", "app.py", "--server.port=8000", "--server.address=0.0.0.0"] 
